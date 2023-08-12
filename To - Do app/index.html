@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice-Controlled To-Do App</title>
+<style>
+ 
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f7fa;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 400px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #3498db;
+  }
+  .task-list {
+    list-style: none;
+    padding: 0;
+  }
+  .task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+  }
+  .task-item:last-child {
+    border-bottom: none;
+  }
+  .task-text {
+    flex: 1;
+    color: #333;
+  }
+  .delete-button {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .add-task {
+    display: flex;
+    margin-top: 20px;
+  }
+  .task-input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+  .add-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+ 
+  }
+  
+ .voice-button {
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .voice-button:hover {
+    background-color: #16a085;
+    
+  }
+  .Delete-button {
+    background-color: #e30707;
+   
+  }
+
+  .Delete-button:hover {
+    background-color: #16a085;}
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Voice-Controlled To-Do App</h1>
+    <ul class="task-list" id="taskList">
+      <!-- Tasks will be added dynamically here -->
+    </ul>
+    <div class="add-task">
+      <input type="text" class="task-input" id="newTask" placeholder="Enter a new task">
+      <button class="add-button" onclick="addTask()">Add</button>
+      <button class="voice-button" onclick="startVoiceRecognition()">Voice Input</button>
+    </div>
+  </div>
+
+  <script>
+    
+    function addTask() {
+      const newTaskInput = document.getElementById("newTask");
+      const taskList = document.getElementById("taskList");
+      const taskText = newTaskInput.value.trim();
+
+      if (taskText !== "") {
+        const taskItem = document.createElement("li");
+        taskItem.classList.add("task-item");
+
+        const taskTextElement = document.createElement("span");
+        taskTextElement.classList.add("task-text");
+        taskTextElement.textContent = taskText;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("delete-button");
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", function() {
+          taskItem.remove();
+        });
+
+        taskItem.appendChild(taskTextElement);
+        taskItem.appendChild(deleteButton);
+
+        taskList.appendChild(taskItem);
+        newTaskInput.value = "";
+      }
+    }
+  
+
+    function startVoiceRecognition() {
+      const recognition = new window.webkitSpeechRecognition || window.SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const result = event.results[0][0].transcript;
+        document.getElementById("newTask").value = result;
+        recognition.stop();
+      };
+
+      recognition.onend = function() {
+        recognition.stop();
+      };
+    }
+  </script>
+</body>
